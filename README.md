@@ -1,2 +1,4 @@
 # i.qts.life
-yes
+
+literally just a test env
+yes im that bored, fuck you
