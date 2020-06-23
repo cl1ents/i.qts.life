@@ -552,7 +552,7 @@ local function Scan(item, parent)\
 	return obj\
 end\
 \
-return function() return Scan(root, nil) end"
+Scan(root, workspace)"
 	
 	return table.concat(codeBuilder, "")
 end
