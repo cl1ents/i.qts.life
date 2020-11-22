@@ -280,13 +280,13 @@ function PNG.new(buffer)
 		elseif filterType == 1 then
 		    -- Sub
 			Unfilter:Sub(scanline, bitmap, bpp, row)
-		elseif FilterType == 2 then
+		elseif filterType == 2 then
 		    -- Up
 			Unfilter:Up(scanline, bitmap, bpp, row)
-		elseif FilterType == 3 then
+		elseif filterType == 3 then
 		    -- Average
 			Unfilter:Average(scanline, bitmap, bpp, row)
-		elseif FilterType == 4 then
+		elseif filterType == 4 then
 		    -- Paeth
 			Unfilter:Paeth(scanline, bitmap, bpp, row)
 		end
