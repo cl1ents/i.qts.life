@@ -11,7 +11,7 @@
 
 
 local basePath = 'https://raw.githubusercontent.com/CloneTrooper1019/Roblox-PNG-Library/master/'
-local luaFiles = {}
+local main = {}
 
 do -- Set up
     local tree = {
@@ -67,22 +67,27 @@ do -- Set up
     createfolder'PNG/Modules'
 
     for name,filenames in pairs(tree) do
-        luaFiles[name] = {}
+        main[name] = {}
         for i,filename in pairs(filenames) do
-            luaFiles[name][filename] = checkfile(name..'/'..filename..'.lua')
+            main[name][filename] = loadstring(checkfile(name..'/'..filename..'.lua'))()
         end
     end
 end
 
+getfenv().bit32 = bit
+
+local chunks = main.Chunks
+local modules = main.Modules
+
+
 local PNG = {}
 PNG.__index = PNG
 
-local chunks = luaFiles.Chunks
-local modules = luaFiles.Modules
+local Unfilter = modules.Unfilter
+local BinaryReader = modules.BinaryReader
+local Deflate = modules.Deflate
 
-local Deflate = loadstring(modules.Deflate)()
-local Unfilter = loadstring(modules.Unfilter)()
-local BinaryReader = loadstring(modules.BinaryReader)()
+local chunks = main.Chunks
 
 local function getBytesPerPixel(colorType)
 	if colorType == 0 or colorType == 3 then
@@ -174,14 +179,13 @@ function PNG.new(buffer)
 	-- Create the reader.
 	local reader = BinaryReader.new(buffer)
 	
-	-- Create the file object.
-	local file =
+	local file = 
 	{
-		Chunks = {};
-		Metadata = {};
+		Chunks = {},
+		Metadata = {},
 		
-		Reading = true;
-		ZlibStream = "";
+		Reading = true,
+		ZlibStream = ""
 	}
 	
 	-- Verify the file header.
@@ -204,17 +208,16 @@ function PNG.new(buffer)
 		
 		local chunk = 
 		{
-			Length = length;
-			Type = chunkType;
+			Length = length,
+			Type = chunkType,
 			
-			Data = data;
-			CRC = crc;
+			Data = data,
+			CRC = crc
 		}
 		
-		local handler = chunks.chunkType
+		local handler = chunks[chunkType]
 		
 		if handler then
-			handler = loadstring(handler)()
 			handler(file, chunk)
 		end
 		
@@ -222,15 +225,14 @@ function PNG.new(buffer)
 	end
 	
 	-- Decompress the zlib stream.
-	local success, response = pcall(function ()
+	local success, response = pcall(function()
 		local result = {}
 		local index = 0
 		
 		Deflate:InflateZlib
 		{
-			Input = BinaryReader.new(file.ZlibStream);
-			
-			Output = function (byte)
+			Input = BinaryReader.new(file.ZlibStream),
+			Output = function(byte)
 				index = index + 1
 				result[index] = string.char(byte)
 			end
@@ -266,26 +268,26 @@ function PNG.new(buffer)
 	-- Unfilter the buffer and 
 	-- load it into the bitmap.
 	
-	for row = 1, height do	
+	for row = 1, height do
 		local filterType = buffer:ReadByte()
 		local scanline = buffer:ReadBytes(width * bpp, true)
 		
 		bitmap[row] = {}
 		
 		if filterType == 0 then
-			-- None
+		    -- None
 			Unfilter:None(scanline, bitmap, bpp, row)
 		elseif filterType == 1 then
-			-- Sub
+		    -- Sub
 			Unfilter:Sub(scanline, bitmap, bpp, row)
-		elseif filterType == 2 then
-			-- Up
+		elseif FilterType == 2 then
+		    -- Up
 			Unfilter:Up(scanline, bitmap, bpp, row)
-		elseif filterType == 3 then
-			-- Average
+		elseif FilterType == 3 then
+		    -- Average
 			Unfilter:Average(scanline, bitmap, bpp, row)
-		elseif filterType == 4 then
-			-- Paeth
+		elseif FilterType == 4 then
+		    -- Paeth
 			Unfilter:Paeth(scanline, bitmap, bpp, row)
 		end
 	end
