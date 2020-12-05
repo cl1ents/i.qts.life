@@ -5,7 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <title>Welcome, to osu!</title>
-        <script src="https://raw.githubusercontent.com/sbrl/soundbox/master/soundbox.min.js"></script>
     </head>
     <body>
         
@@ -13,17 +12,23 @@
 	        <p>If you are reading this, it is because your browser does not support the audio tag.</p>
         </audio>
 
-        <script>
-            var soundbox = new SoundBox();
-            var moosic = document.getElementById("song")
-            if (window.getComputedStyle(moosic).width == "100%" ) {
-                //try {
-                //    moosic.play()
-                //} catch(e) {
-                    soundbox.load("welcome", "./welcome.mp3")
-                        .then(() => soundbox.play("welcome"))
-                //}
-            }
+        <script type="module">    
+            "use strict";
+
+            import SoundBox from "./soundbox.mjs";
+
+            window.addEventListener("load", function(event) {
+                window.soundbox = new SoundBox();
+                var moosic = document.getElementById("song")
+                if (window.getComputedStyle(moosic).width == "100%" ) {
+                    //try {
+                    //    moosic.play()
+                    //} catch(e) {
+                        window.soundbox.load("welcome", "./welcome.mp3")
+                            .then(() => window.soundbox.play("welcome"))
+                    //}
+                }
+            })
         </script>
 
     </body>
