@@ -6,12 +6,20 @@
         
         <title>Welcome, to osu!</title>
         <style>
-            bod
+            body {
+                overflow: hidden;
+                background: transparent;
+            }
+
+            audio {
+                width: 100%;
+                visibility: hidden;
+            }
         </style>
     </head>
     <body>
         
-        <audio id="song" src="./welcome.mp3" controls style="width: 100%;">
+        <audio id="song" src="./welcome.mp3" controls>
 	        <p>If you are reading this, it is because your browser does not support the audio tag.</p>
         </audio>
 
