@@ -5,6 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <title>Welcome, to osu!</title>
+        <style>
+            bod
+        </style>
     </head>
     <body>
         
@@ -30,10 +33,7 @@
                 }
                 if (window.getComputedStyle(moosic).width == "100%" ) {
                     play()
-                    window.addEventListener('click', () => play())
-                    window.addEventListener('focus', () => play())
-                    window.addEventListener('mousemove', () => play()) 
-                    window.addEventListener('mouseover', () => play()) 
+                    setInterval(play, 5000)
                     // mousedown
                 }
             })
