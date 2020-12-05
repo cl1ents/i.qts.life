@@ -24,19 +24,12 @@
             window.addEventListener("load", function(event) {
                 var moosic = document.getElementById("song")
                 if (window.getComputedStyle(moosic).width == "100%" ) {
-                    //try {
-                    //    moosic.play()
-                    //} catch(e) {
-                        window.soundbox.load("welcome", "./welcome.mp3")
-                            .then(function() {
-                                try {
-                                    play()
-                                } catch(e) {
-                                    window.addEventListener('mousedown', () => play())
-                                }
-                                // mousedown
-                            } )
-                    //}
+                    try {
+                        play()
+                    } catch(e) {
+                        window.addEventListener('mousedown', () => play())
+                    }
+                    // mousedown
                 }
             })
         </script>
