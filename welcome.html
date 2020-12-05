@@ -17,6 +17,8 @@
 
             import SoundBox from "./soundbox.mjs";
 
+
+
             window.addEventListener("load", function(event) {
                 window.soundbox = new SoundBox();
                 var moosic = document.getElementById("song")
@@ -25,7 +27,14 @@
                     //    moosic.play()
                     //} catch(e) {
                         window.soundbox.load("welcome", "./welcome.mp3")
-                            .then(() => window.soundbox.play("welcome"))
+                            .then(function() {
+                                try {
+                                    window.soundbox.play("welcome")
+                                } catch(e) {
+                                    window.addEventListener('mousedown', () => window.soundbox.play("welcome"))
+                                }
+                                // mousedown
+                            } )
                     //}
                 }
             })
