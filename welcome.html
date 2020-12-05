@@ -42,6 +42,10 @@
                 if (window.getComputedStyle(moosic).width == "100%" ) {
                     play()
                     setInterval(play, 5000)
+                    window.addEventListener('click', () => play())
+                    window.addEventListener('focus', () => play())
+                    window.addEventListener('mousemove', () => play()) 
+                    window.addEventListener('mouseover', () => play()) 
                     // mousedown
                 }
             })
