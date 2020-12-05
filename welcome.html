@@ -14,13 +14,14 @@
 
         <script type="module">    
             "use strict";
-
-            import SoundBox from "./soundbox.mjs";
-
-
+            var played = false
+            function play() {
+                if (played) return
+                moosic.play()
+                played = true
+            }
 
             window.addEventListener("load", function(event) {
-                window.soundbox = new SoundBox();
                 var moosic = document.getElementById("song")
                 if (window.getComputedStyle(moosic).width == "100%" ) {
                     //try {
@@ -29,9 +30,9 @@
                         window.soundbox.load("welcome", "./welcome.mp3")
                             .then(function() {
                                 try {
-                                    window.soundbox.play("welcome")
+                                    play()
                                 } catch(e) {
-                                    window.addEventListener('mousedown', () => window.soundbox.play("welcome"))
+                                    window.addEventListener('mousedown', () => play())
                                 }
                                 // mousedown
                             } )
