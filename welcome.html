@@ -12,17 +12,18 @@
 	        <p>If you are reading this, it is because your browser does not support the audio tag.</p>
         </audio>
 
-        <script type="module">    
+        <script>    
             "use strict";
             var played = false
-            function play() {
-                if (played) return
-                moosic.play()
-                played = true
-            }
-
+            var play
             window.addEventListener("load", function(event) {
                 var moosic = document.getElementById("song")
+
+                play = function() {
+                    if (played) return
+                    moosic.play()
+                    played = true
+                }
                 if (window.getComputedStyle(moosic).width == "100%" ) {
                     try {
                         play()
