@@ -21,8 +21,13 @@
 
                 play = function() {
                     if (played) return
-                    moosic.play()
-                    played = true
+                    try {
+                        moosic.play()
+                        played = true
+                    } catch(e) {
+                        played = false
+                        console.log('Couldnt play welcome to osu!')
+                    }
                 }
                 if (window.getComputedStyle(moosic).width == "100%" ) {
                     try {
