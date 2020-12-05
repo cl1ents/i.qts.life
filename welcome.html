@@ -7,13 +7,28 @@
     </head>
     <body>
         
-        <audio id="song" src="./welcome.mp3" controls autoplay >
+        <audio id="song" src="./welcome.mp3" controls autoplay style="width: 100%;">
 	        <p>If you are reading this, it is because your browser does not support the audio tag.</p>
         </audio>
 
         <script>
+
+            var isVisible = function (anchor, iframe_id) {
+                var ifrId = iframe_id || 'bv_page';
+                var ifrOffset = window.parent.document.getElementById(ifrId).offsetTop;
+                var myloc = document.getElementById(anchor).offsetTop + ifrOffset;
+                var viewtop = window.parent.scrollY;
+                var viewbot = viewtop + window.parent.innerHeight;
+                if (viewbot > myloc && myloc > viewtop){
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+
             var moosic = document.getElementById("song")
-            if (window.getComputedStyle(moosic).display != "none") {
+            //var moosic = document.getElementById("song")
+            if (isVisible("song")) {
                 moosic.play()
             }
         </script>
