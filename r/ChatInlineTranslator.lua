@@ -284,11 +284,11 @@ function translateFrom(message)
     local translation = translate(message, YourLang)
 
     local text
-    if translation.from.language.iso ~= YourLang then 
+    if translation.from.language ~= YourLang then 
         text = translation.text
     end
 
-    return {text, translation.from.language.iso}
+    return {text, translation.from.language}
 end
 
 function get(plr, msg)
@@ -310,9 +310,6 @@ Players.PlayerAdded:Connect(function(plr)
         get(plr, msg)
     end)
 end)
-
--- Language Dictionary
---local l = {afrikaans = "af",albanian = "sq",amharic = "am",arabic = "ar",armenian = "hy",azerbaijani = "az",bashkir = "ba",basque = "eu",belarusian = "be",bengal = "bn",bosnian = "bs",bulgarian = "bg",burmese = "my",catalan = "ca",cebuano = "ceb",chinese = "zh",croatian = "hr",czech = "cs",danish = "da",dutch = "nl",english = "en",esperanto = "eo",estonian = "et",finnish = "fi",french = "fr",galician = "gl",georgian = "ka",german = "de",greek = "el",gujarati = "gu",creole = "ht",hebrew = "he",hillmari = "mrj",hindi = "hi",hungarian = "hu",icelandic = "is",indonesian = "id",irish = "ga",italian = "it",japanese = "ja",javanese = "jv",kannada = "kn",kazakh = "kk",khmer = "km",kirghiz = "ky",korean = "ko",laotian = "lo",latin = "la",latvian = "lv",lithuanian = "lt",luxembourg = "lb",macedonian = "mk",malagasy = "mg",malayalam = "ml",malay = "ms",maltese = "mt",maori = "mi",marathi = "mr",mari = "mhr",mongolian = "mn",nepalese = "ne",norwegian = "no",papiamento = "pap",persian = "fa",polish = "pl",portuguese = "pt",punjabi = "pa",romanian = "ro",russian = "ru",scottish = "gd",serbian = "sr",sinhalese = "si",slovak = "sk",slovenian = "sl",spanish = "es",sundanese = "su",swahili = "sw",swedish = "sv",tagalog = "tl",tajik = "tg",tamil = "ta",tartar = "tt",telugu = "te",thai = "th",turkish = "tr",udmurt = "udm",ukrainian = "uk",urdu = "ur",uzbek = "uz",vietnamese = "vi",welsh = "cy",xhosa = "xh",yiddish = "yi"}
 
 local sendEnabled = false
 local target = ""
@@ -342,8 +339,13 @@ local HookChat = function(Bar)
                     if Message == ">d" then
                         disableSend()
                     elseif Message:sub(1,1) == ">" and not Message:find(" ") then
-                        sendEnabled = true
-                        target = Message:sub(2)
+                        if getISOCode(Message:sub(2)) then
+                            sendEnabled = true
+                            target = Message:sub(2)
+                        else
+                            properties.Text = "[TR] Invalid language"
+                            StarterGui:SetCore("ChatMakeSystemMessage", properties)
+                        end
                     elseif sendEnabled then
                         Message = translateTo(Message, target)
                         game:GetService('Players'):Chat(Message); CRemote:FireServer(Message,'All')
