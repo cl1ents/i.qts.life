@@ -348,9 +348,15 @@ local HookChat = function(Bar)
                         end
                     elseif sendEnabled then
                         Message = translateTo(Message, target)
-                        game:GetService('Players'):Chat(Message); CRemote:FireServer(Message,'All')
+                        if not _G.SecureChat then
+                            game:GetService('Players'):Chat(Message); 
+                        end
+                        CRemote:FireServer(Message,'All')
                     else
-                        game:GetService('Players'):Chat(Message); CRemote:FireServer(Message,'All')
+                        if not _G.SecureChat then
+                            game:GetService('Players'):Chat(Message); 
+                        end
+                        CRemote:FireServer(Message,'All')
                     end
                 end
             end)
