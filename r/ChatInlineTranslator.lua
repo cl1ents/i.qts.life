@@ -346,7 +346,12 @@ do -- :Chatted replacement!!
         local msg = tostring(data.Message)
         local originalchannel = tostring(data.OriginalChannel)
 
-        plr = if plr then plr.DisplayName else tostring(data.FromSpeaker)
+        if plr then 
+            plr = plr.DisplayName 
+        else 
+            plr = tostring(data.FromSpeaker)
+        end
+        
         if originalchannel:find("To ") then
             plr = plr..originalchannel
         end
