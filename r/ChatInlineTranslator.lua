@@ -305,26 +305,36 @@ function translateFrom(message)
 end
 
 -- // CHAT FUNCTIONS // --
+
+local CBar, Connected = LP['PlayerGui']:WaitForChild('Chat')['Frame'].ChatBarParentFrame['Frame'].BoxFrame['Frame'].ChatBar, {}
 local EventFolder = game:GetService('ReplicatedStorage'):WaitForChild('DefaultChatSystemChatEvents')
 local Chat do
+    function Chat(Original, msg, Channel)
+        CBar.Text = msg
+        for i,v in pairs(getconnections(CBar.FocusLost)) do
+            v:Fire(true, nil, true)
+        end
+    end
+
+    --[[
     local ChatMain = LP.PlayerScripts:FindFirstChild('ChatMain', true)
     local MessageSender if ChatMain then
         MessageSender = require(ChatMain.MessageSender)
         ChatMain = require(ChatMain)
     end
 
-    function Chat(msg, Channel)
+    function Chat(Original, msg, Channel)
         Channel = Channel or "All"
         if MessageSender and ChatMain then
-            ChatMain.MessagePosted:fire(msg)
+            ChatMain.MessagePosted:fire(Original)
             MessageSender:SendMessage(msg, Channel)
         else
             if not _G.SecureChat then
-                game:GetService('Players'):Chat(msg); 
+                game:GetService('Players'):Chat(Original); 
             end
             EventFolder.SayMessageRequest:FireServer(msg, Channel)
         end
-    end
+    end]]
 end
 
 do -- :Chatted replacement!!
@@ -351,7 +361,7 @@ do -- :Chatted replacement!!
         else 
             plr = tostring(data.FromSpeaker)
         end
-        
+
         if originalchannel:find("To ") then
             plr = plr..originalchannel
         end
@@ -376,15 +386,15 @@ function disableSend()
     StarterGui:SetCore("ChatMakeSystemMessage", properties)
 end
 
-local CBar, Connected = LP['PlayerGui']:WaitForChild('Chat')['Frame'].ChatBarParentFrame['Frame'].BoxFrame['Frame'].ChatBar, {}
 
 local HookChat = function(Bar)
     coroutine.wrap(function()
         if not table.find(Connected,Bar) then
-            local Connect = Bar['FocusLost']:Connect(function(Enter)
-                if Enter ~= false and Bar['Text'] ~= '' then
-                    local Message = Bar['Text']
-                    Bar['Text'] = '';
+            local Connect = Bar['FocusLost']:Connect(function(Enter, _, ignore)
+                if ignore then return end
+                if Enter ~= false and Bar.Text ~= '' then
+                    local Message = Bar.Text
+                    Bar.Text = ''
                     if Message == ">d" then
                         disableSend()
                     elseif Message:sub(1,1) == ">" and not Message:find(" ") then
@@ -395,11 +405,14 @@ local HookChat = function(Bar)
                             properties.Text = "[TR] Invalid language"
                             StarterGui:SetCore("ChatMakeSystemMessage", properties)
                         end
-                    elseif sendEnabled then
+                    elseif sendEnabled and not (Message:sub(1,3) == "/e " or Message:sub(1,7) == "/emote ") then
+                        local og = Message
                         Message = translateTo(Message, target)
-                        Chat(Message)
+                        --Bar.Text = Message
+                        Chat(og, Message)
                     else
-                        Chat(Message)
+                        --Bar.Text = Message
+                        Chat(Message, Message)
                     end
                 end
             end)
