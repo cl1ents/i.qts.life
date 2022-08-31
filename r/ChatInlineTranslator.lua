@@ -1,6 +1,6 @@
 --[[
     Message Translator
-    Made by Aim, updated by cli
+    Made by Aim, updated by evn
     Credits to Riptxde for the sending chathook
 --]]
 
